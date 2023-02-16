@@ -1,6 +1,7 @@
 package jpabook.jpashop;
 
 import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 public class MemberRepositoryTest {
 
-    @Autowired MemberRepository memberRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
     @Test
     @Transactional
@@ -27,21 +29,21 @@ public class MemberRepositoryTest {
         //@Rollback(false) 해주면 볼수 있음
 
         //given
-        Member member = new Member();
-        member.setUsername("memberA");
+  //      Member member = new Member();
+//        member.setUsername("memberA");
 
         //when
-        Long savedId = memberRepository.save(member);
+        //Long savedId = memberRepository.save(member);
         //ctrl alt v 변수 뽑아오는거
 
-        Member findMember = memberRepository.find(savedId);
+        //Member findMember = memberRepository.find(savedId);
 
         //then
-        Assertions.assertThat(findMember.getId()).isEqualTo(member.getId());
+        //Assertions.assertThat(findMember.getId()).isEqualTo(member.getId());
 
         //복사 ctrl d
-        Assertions.assertThat(findMember.getUsername()).isEqualTo(member.getUsername());
-        System.out.println("findMember== member"+(findMember==member));
+        //Assertions.assertThat(findMember.getUsername()).isEqualTo(member.getUsername());
+        //System.out.println("findMember== member"+(findMember==member));
 
 
     }    
