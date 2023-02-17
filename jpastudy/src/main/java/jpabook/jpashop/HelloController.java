@@ -13,4 +13,6 @@ public class HelloController {
         return "hello";  //화면 이름
     }
 
+
+
 }
