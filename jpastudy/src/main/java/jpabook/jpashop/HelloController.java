@@ -1,6 +1,7 @@
 package jpabook.jpashop;
 
 import lombok.AllArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,5 +26,20 @@ public class HelloController {
     public String hello(@RequestHeader(name="Accept-Language", required=false) Locale locale){
         return messageSource.getMessage("greeting.message",null,locale);
     }
+
+//    @GetMapping
+//    public Resource<User> retreveUser(@PathVariable int id){
+//        User user = service.findOne(id);
+//
+//        //HATEOAS
+//        Resource<User> resource = new Resource<>(user);
+//        ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).retrieveAllUsers());
+//
+//        resource.add(linkTo.withRel("all-users"));
+//
+//        return resource;
+//
+//    }
+
 
 }
