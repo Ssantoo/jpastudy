@@ -101,7 +101,7 @@ public class OrderServiceTest {
 
         assertEquals("주문이 취소된 상품은 그만큼 돌아와야한다.", 10, item.getStockQuantity());
 
-        
+
 
     }
 
