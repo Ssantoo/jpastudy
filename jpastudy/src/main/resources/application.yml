@@ -4,6 +4,11 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+  thymeleaf:
+  prefix: classpath:/templates/
+  suffix: .html
+
+
 
   jpa:
     hibernate:
@@ -17,3 +22,4 @@ logging:
   level:
     org.hibernate.sql: debug #logger? ??? ??
     org.hibernate.type: trace
+
