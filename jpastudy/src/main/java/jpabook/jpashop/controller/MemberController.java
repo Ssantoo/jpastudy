@@ -1,4 +1,4 @@
-package jpabook.jpashop.Controller;
+package jpabook.jpashop.controller;
 
 import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Member;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class MemberController {
         /*
         보통은 오류가 발생하면 튕겨나가는데
         bindingresult를 해주면 result에 결과가 담겨서 실행이 됨
-        에러가 있더라도 form 데이터에 담겨있다``
+        에러가 있더라도 form 데이터에 담겨있다
         */
 
         if(result.hasErrors()){
@@ -49,5 +50,23 @@ public class MemberController {
         return "redirect:/";
 
     }
+
+    @GetMapping("/members")
+    public String list(Model model){
+        List<Member> members = memberService.findMembers();
+        model.addAttribute("members", members);
+        return "members/memberList";
+
+    }
+
+
+
+
+
+
+
+
+
+
 
 }
