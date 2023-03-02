@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +18,7 @@ public class Member {
     @Column(name= "member_id")
     private Long id;
 
-    //@NotEmpty
+
     private String name;
 
     @Embedded
@@ -25,6 +26,9 @@ public class Member {
     //embedded: @Embeddable를 포함하고 있다는거 표시
     //내장 타입
 
+
+    //양방향 있는 쪽에서
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
     //mappedBy 적는 순간 난 매핑하는 애가 아니고
