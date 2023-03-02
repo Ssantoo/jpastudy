@@ -100,11 +100,19 @@ public class OrderRepository {
         return query.getResultList();
     }
 
+
+
 //    JPA Criteria는 JPA 표준 스펙이지만 실무에서 사용하기에 너무 복잡하다. 결국 다른 대안이 필요하다.
 //    많은 개발자가 비슷한 고민을 했지만, 가장 멋진 해결책은 Querydsl이 제시했다.
 
 
-
+    public List<Order> findAllWithMemberDelivery() {
+        return em.createQuery(
+                "select o from Order o"+
+                        "join fetch o.member m" +
+                        "join fetch o.delivery d", Order.class
+        ).getResultList();
+    }
 
 
 
