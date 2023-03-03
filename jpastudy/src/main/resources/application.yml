@@ -18,6 +18,7 @@ spring:
         #show_sql: true  #syso? ????
         format_sql: true
         default_batch_fetch_size: 1000 #인쿼리수를 몇개를 할 것인지
+    #open-in-view: false
 
 logging:
   level:
