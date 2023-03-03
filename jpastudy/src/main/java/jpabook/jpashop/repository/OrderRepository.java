@@ -116,7 +116,17 @@ public class OrderRepository {
     }
 
 
+    public List<Order> findAllWithItem() {
+        //distinct : jpa가 자체적으로 order를 가져올때 같은 id값이면 중복이면 버려줌
+        //대신 쿼리는 다 가져오고
+        return em.createQuery(
+                "select distinct o from Order o"+
+                " join fetch o.member m" +
+                " join fetch o.delivery d" +
+                " join fetch o.orderItems oi "+
+                " join fetch oi.item i", Order.class)
+                .getResultList();
 
 
-
+    }
 }

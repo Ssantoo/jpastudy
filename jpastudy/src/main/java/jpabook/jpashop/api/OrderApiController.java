@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 
 /**
  *  이번에는 컬렉션인 일대다 관계 (OneToMany)를 조회하고, 최적화하는 방법을 알아보자
@@ -70,12 +72,12 @@ public class OrderApiController {
 
     @GetMapping("/api/v2/orders")
     public List<OrderDto> ordersV2(){
-        
+
         List<Order> orders = orderRepository.findAllByString(new OrderSearch());
 
         return orders.stream()
                 .map(o-> new OrderDto(o))
-                .collect(Collectors.toList());
+                .collect(toList());
 
 
     }
@@ -89,6 +91,7 @@ public class OrderApiController {
         private OrderStatus orderStatus;
         private Address address;
         //private List<OrderItem> orderItems;
+        //dto 안에 entity가 있으면 안된다
         private List<OrderItemDto> orderItems;
 
 
@@ -100,12 +103,13 @@ public class OrderApiController {
             address = order.getDelivery().getAddress();
             orderItems = order.getOrderItems().stream()
                                 .map(orderItem -> new OrderItemDto(orderItem))
-                                .collect(Collectors.toList());
+                                .collect(toList());
         }
     }
 
     @Data
     static class OrderItemDto {
+
         private String itemName;//상품 명
         private int orderPrice; //주문 가격
         private int count; //주문 수량
@@ -115,6 +119,33 @@ public class OrderApiController {
             count = orderItem.getCount();
         }
     }
+
+
+    @GetMapping("/api/v3/orders")
+    public List<OrderDto> ordersV3() {
+        List<Order> orders = orderRepository.findAllWithItem();
+        List<OrderDto> result = orders.stream()
+                .map(o -> new OrderDto(o))
+                .collect(toList());
+        return result;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
