@@ -2,7 +2,9 @@ package jpabook.jpashop.repository;
 
 
 
-import jpabook.jpashop.domain.Member;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jpabook.jpashop.domain.*;
 import jpabook.jpashop.domain.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -14,11 +16,19 @@ import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jpabook.jpashop.domain.QMember.*;
+import static jpabook.jpashop.domain.QOrder.order;
+
 @Repository
-@RequiredArgsConstructor
 public class OrderRepository {
 
     private final EntityManager em;
+    private final JPAQueryFactory query;
+
+    public OrderRepository(EntityManager em) {
+        this.em = em;
+        this.query = new JPAQueryFactory(em);
+    }
 
     public void save(Order order) {
         em.persist(order);
@@ -28,17 +38,17 @@ public class OrderRepository {
         return em.find(Order.class, id);
     }
 
-    public List<Order> findAll(OrderSearch orderSearch) {
-
-        return em.createQuery("select o from Order o join o.member m" +
-                        " where o.status = :status " +
-                        " and m.name like :name ", Order.class)
-                .setParameter("status", orderSearch.getOrderStatus())
-                .setParameter("name", orderSearch.getMemberName())
-                //.setFirstResult(100) 페이징 100부터 시작하고 싶으면
-                .setMaxResults(1000)  //최대 천개까지 조회 되게끔
-                .getResultList();
-    }
+//    public List<Order> findAll(OrderSearch orderSearch) {
+//
+//        return em.createQuery("select o from Order o join o.member m" +
+//                        " where o.status = :status " +
+//                        " and m.name like :name ", Order.class)
+//                .setParameter("status", orderSearch.getOrderStatus())
+//                .setParameter("name", orderSearch.getMemberName())
+//                //.setFirstResult(100) 페이징 100부터 시작하고 싶으면
+//                .setMaxResults(1000)  //최대 천개까지 조회 되게끔
+//                .getResultList();
+//    }
 
 
     //JPQL 쿼리를 문자로 생성하기는 번거롭고, 실수로 인한 버그가 충분히 발생할 수 있다.
@@ -103,11 +113,42 @@ public class OrderRepository {
     }
 
     //QueryDSL
-//    public List<Order> findAll(OrderSearch){
-//
-//    }
+    //또다시 쓸수 있다 조립하기 쉽다
+    public List<Order> findAllEx(OrderSearch orderSearch){
+        return query
+                .select(order)
+                .from(order)
+                .where(statusEq(orderSearch.getOrderStatus()))
+                .fetch();
+    }
 
 
+    public List<Order> findAll(OrderSearch orderSearch){
+//        QOrder order = QOrder.order;
+  //      QMember member = QMember.member;
+
+        //import static으로 뺄 수 있음
+        return query.select(order)
+                .from(order)
+                .join(order.member, member)
+                .where(statusEq(orderSearch.getOrderStatus()), nameLike(orderSearch.getMemberName()))
+                .limit(1000)
+                .fetch();
+    }
+
+    private static BooleanExpression nameLike(String memberName) {
+        if(!StringUtils.hasText(memberName)){
+            return null;
+        }
+        return member.name.like(memberName);
+    }
+
+    private BooleanExpression statusEq(OrderStatus statusCond){
+        if (statusCond == null){
+            return null;
+        }
+        return order.status.eq(statusCond);
+    }
 
 
 
